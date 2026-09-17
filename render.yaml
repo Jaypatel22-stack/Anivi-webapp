@@ -1,31 +1,17 @@
-# Render Blueprint — deploys Anvil as one web service + one managed
-# Postgres database. Push this repo to GitHub/GitLab, then in the Render
-# dashboard choose "New +" -> "Blueprint" and point it at the repo; Render
-# reads this file and creates both resources for you.
-#
-# Reference: https://render.com/docs/blueprint-spec
-
 databases:
   - name: anvil-db
     databaseName: anvil
     user: anvil
-    plan: basic-256mb # ~$6/mo. Use "free" to try it, but read the README
-    # note about the free tier deleting itself after 30 days before you
-    # put a real customer's data on it.
+    plan: free
     postgresMajorVersion: "17"
 
 services:
   - type: web
     runtime: docker
     name: anvil-app
-    plan: starter # ~$7/mo, always-on. "free" works too but sleeps after
-    # inactivity and cold-starts slowly — fine for a demo, not for a shop
-    # floor that needs the app up when they walk in.
+    plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /login
-    # Runs once per deploy, after the image builds and before it starts
-    # serving traffic. Safe to run on every deploy: it only applies
-    # migrations that haven't run yet (see db/migrate.js).
     preDeployCommand: node db/migrate.js
     envVars:
       - key: DATABASE_URL
@@ -37,4 +23,4 @@ services:
       - key: NODE_ENV
         value: production
       - key: AUTH_SECRET
-        generateValue: true # Render generates a random secret for you.
+        generateValue: true

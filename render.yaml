@@ -12,7 +12,6 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /login
-    preDeployCommand: node db/migrate.js
     envVars:
       - key: DATABASE_URL
         fromDatabase:
